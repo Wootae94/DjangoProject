@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="height: 100%; border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1>
+            {{ nav_title }}
+        </h1>
+        <form action="{% url 'boapp:setting' id=nav_title %}" method="post">
+            {% csrf_token %}
+            <div>
+                <p>
+                    <input type="hidden" name="nav_id" value="{{ nav_title }}">
+                </p>
+                <p>
+                    <input type="text" name="name_setting" placeholder="이름(명칭)을 입력해주세요.">
+                </p>
+
+                {% if nav_title == 'doctor' %}
+                    <span>복수 선택시 Ctrl(or Command)키와 함께 눌러주세요.</span>
+
+                    <p>
+                        <select id="hospital" name="hospital">
+                            {% if hospital_list %}
+                                {% for hospital in hospital_list %}
+                                    <option value="{{ hospital.hospital_idx }}">{{ hospital.hospital_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <label for="department"></label><select id="department" name="department[]" multiple>
+                        {% if department_list %}
+                            {% for department in department_list %}
+                                <option value="{{ department.department_idx }}">{{ department.department_name }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                        <select id="non_insured" name="non_insured[]" multiple>
+                            {% if non_insured_list %}
+                                {% for non_insured in non_insured_list %}
+                                    <option value="{{ non_insured.treatment_idx }}">{{ non_insured.treatment_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </p>
+                    {% for day in day_list %}
+                        <p>{{ day }}요일</p>
+                        <p>
+                            <label for="open_time_{{ forloop.counter }}">영업 시작 시간</label>
+                            <input type="text" id="open_time_{{ forloop.counter }}"
+                                   name="open_time_{{ forloop.counter }}"
+                                   onfocus="(this.type='time')">
+
+                            <label for="close_time_{{ forloop.counter }}">영업 종료 시간</label>
+                            <input type="text" id="close_time_{{ forloop.counter }}"
+                                   name="close_time_{{ forloop.counter }}"
+                                   onfocus="(this.type='time')">
+                        </p>
+                        <p>
+                            <label for="start_time_{{ i }}">점심 시작 시간</label>
+                            <input type="text" id="start_time_{{ forloop.counter }}"
+                                   name="start_time_{{ forloop.counter }}"
+                                   onfocus="(this.type='time')">
+
+                            <label for="end_time_{{ i }}">점심 종료 시간</label>
+                            <input type="text" id="end_time_{{ forloop.counter }}" name="end_time_{{ forloop.counter }}"
+                                   onfocus="(this.type='time')">
+                        </p>
+                    {% endfor %}
+                {% endif %}
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+        <div style="text-align: center;">
+            {% if data_list %}
+                <table style="border-collapse: collapse; width: 100%; margin: 25px 0; font-size: 18px; text-align: center;">
+                    <thead>
+                    <tr>
+                        <!-- 각 데이터의 필드 이름을 동적으로 출력합니다 -->
+                        {% for key in data_list.0.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in data_list %}
+                        <tr>
+                            <!-- 각 데이터의 필드 값을 동적으로 출력합니다 -->
+                            {% for key, value in data.items %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

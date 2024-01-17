@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="height: 100%; border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1>
+            {{ nav_title }}
+        </h1>
+    </div>
+    <div style="text-align: center">
+        <h2>{{ search_keyword }}</h2>
+        <form action="{% url 'foapp:search' %}" method="GET">
+            <label for="search_word">단어 검색</label>
+            <input type="text" name="q" id="search_word">
+            <input type="submit" class="btn btn-primary" value="검색">
+        </form>
+    </div>
+    <div style="text-align: center">
+        <form action="{% url 'foapp:search' %}" method="GET">
+            <label for="search_datetime">날짜 검색</label>
+            <input type="text" name="d" id="search_datetime" onfocus="(this.type='date')">
+            <input type="text" name="t" id="search_datetime" onfocus="(this.type='time')">
+            <input type="submit" class="btn btn-primary" value="검색">
+        </form>
+    </div>
+    <div style="text-align: center">
+        {% if data_list %}
+            {% for data in data_list %}
+                <li>{{ data }}</li>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

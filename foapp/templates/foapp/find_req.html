@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="height: 100%; border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1>
+            {{ nav_title }}
+        </h1>
+    </div>
+    <div style="text-align: center">
+        <form action="{% url 'foapp:find_req' %}" method="GET">
+            <p>
+                <label for="doctor">의사 선택</label>
+                <select id="doctor" name="doctor">
+                    {% if doctor_list %}
+                        {% for doctor in doctor_list %}
+                            <option value="{{ doctor.doctor_idx }}">{{ doctor.doctor_name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </p>
+            <p>
+                <input type="submit" class="btn btn-primary" value="검색">
+
+            </p>
+        </form>
+    </div>
+    <div style="text-align: center">
+        <p>검색 의사: {{  doctor_name }}</p>
+        {% if data_list %}
+            <table style="border-collapse: collapse; width: 100%; margin: 25px 0; font-size: 18px; text-align: center;">
+                <thead>
+                <tr>
+                    <!-- 각 데이터의 필드 이름을 동적으로 출력합니다 -->
+                    {% for key in data_list.0.keys %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for data in data_list %}
+                    <tr>
+                        <!-- 각 데이터의 필드 값을 동적으로 출력합니다 -->
+                        {% for key, value in data.items %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                        <td>
+                            <form action="{% url 'foapp:accept_req' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="medical_request_idx" value="{{ data.medical_req_idx }}">
+                                <input type="submit" class="btn btn-primary" value="수락">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

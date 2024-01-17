@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="height: 100%; border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1>
+            {{ nav_title }}
+        </h1>
+    </div>
+    <div style="text-align: center">
+        {% if req_data %}
+            <li>진료요청ID: {{ req_data.medical_request_idx }}</li>
+            <li>환자이름: {{ req_data.patient.patient_name }}</li>
+            <li>의사이름: {{ req_data.doctor.doctor_name }}</li>
+            <li>진료희망 날짜시간: {{ req_data.request_datetime }}</li>
+            <li>진료요청 만료 날짜시간: {{ req_data.request_expire_datetime }}</li>
+
+        {% endif %}
+    </div>
+{% endblock %}

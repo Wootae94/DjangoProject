@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="height: 100%; border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1>
+            {{ nav_title }}
+        </h1>
+    </div>
+    <div style="text-align: center">
+        <h2>{{ search_keyword }}</h2>
+        <form action="{% url 'foapp:request' %}" method="POST">
+            {% csrf_token %}
+            <p>
+                <label for="patient">환자 선택</label>
+
+                <select id="patient" name="patient">
+                    {% if patient_list %}
+                        {% for patient in patient_list %}
+                            <option value="{{ patient.patient_idx }}">{{ patient.patient_name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </p>
+            <p>
+                <label for="doctor">의사 선택</label>
+
+                <select id="doctor" name="doctor">
+                    {% if doctor_list %}
+                        {% for doctor in doctor_list %}
+                            <option value="{{ doctor.doctor_idx }}">{{ doctor.doctor_name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </p>
+            <p>
+                <label for="reg_datetime">날짜 검색</label>
+                <input type="text" name="d" id="reg_datetime" onfocus="(this.type='date')">
+                <input type="text" name="t" id="reg_datetime" onfocus="(this.type='time')">
+            </p>
+            <p>
+                <input type="submit" class="btn btn-primary" value="요청">
+            </p>
+        </form>
+    </div>
+    <div style="text-align: center">
+        {% if req_data %}
+            <li>진료요청ID: {{ req_data.medical_request_idx }}</li>
+            <li>환자이름: {{ patient_name }}</li>
+            <li>의사이름: {{ doctor_name }}</li>
+            {% if req_able == 'Y' %}
+                <li>진료희망 날짜시간: {{ request_datetime }}</li>
+            {% else %}
+                <li>진료희망 날짜시간: 의사의 영업시간이 아닙니다.</li>
+            {% endif %}
+            <li>진료요청 만료 날짜시간: {{ request_expire_datetime }}</li>
+
+        {% endif %}
+    </div>
+{% endblock %}
